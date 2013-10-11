@@ -1,0 +1,13 @@
+language: java
+
+services:
+  - redis-server
+
+jdk:
+  - oraclejdk7
+  - openjdk6
+
+notifications:
+  email: false
+
+script: "mvn clean test"
