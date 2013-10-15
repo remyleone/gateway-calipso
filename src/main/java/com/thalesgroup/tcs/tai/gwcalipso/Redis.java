@@ -20,8 +20,10 @@ public class Redis {
     public static void redis_init() {
         Jedis jedis = new Jedis("localhost");
         jedis.del("coap_servers");
+        jedis.del("observations");
         jedis.sadd("coap_servers", "coap://coap.me");
         jedis.sadd("coap_servers", "coap://localhost");
+        jedis.sadd("observations", "coap://localhost/currentTime");
     }
 
     public static void redis_publish(String channel, String message){
