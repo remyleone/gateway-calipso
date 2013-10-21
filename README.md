@@ -34,3 +34,9 @@ Running
 To get the code running, you should use the following line:
 
   mvn clean compile exec:java
+
+TODO
+----
+
+- Add a smart queue to manage incoming requests and maintain low traffic
+  hypothesis.
