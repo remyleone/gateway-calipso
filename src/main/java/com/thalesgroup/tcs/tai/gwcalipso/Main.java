@@ -6,6 +6,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 public class Main {
     // Base URI the Grizzly HTTP server will listen on
@@ -20,9 +21,10 @@ public class Main {
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, URISyntaxException {
         final HttpServer server = startServer();
         Redis.redis_init();
+        DLSApp.main(args);
         System.out.println(String.format("Jersey app started with WADL available at "
                 + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
         System.in.read();
