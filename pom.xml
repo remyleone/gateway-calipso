@@ -40,33 +40,38 @@
         </dependency>
 
 
-      <dependency>
+        <dependency>
           <groupId>ch.ethz.inf.vs</groupId>
           <artifactId>californium</artifactId>
           <version>0.13.6</version>
           <scope>compile</scope>
-      </dependency>
+        </dependency>
 
-      <dependency>
+        <dependency>
           <groupId>com.sun.jersey</groupId>
           <artifactId>jersey-json</artifactId>
           <version>1.17.1</version>
-      </dependency>
+        </dependency>
 
+        <dependency>
+          <groupId>javax.jmdns</groupId>
+          <artifactId>jmdns</artifactId>
+          <version>3.4.1</version>
+        </dependency>
 
-      <dependency>
+        <dependency>
           <groupId>ch.ethz.inf.vs</groupId>
           <artifactId>cf-client</artifactId>
           <version>0.13.6</version>
-      </dependency>
+        </dependency>
 
-      <dependency>
+        <dependency>
           <groupId>ch.ethz.inf.vs</groupId>
           <artifactId>cf-server</artifactId>
           <version>0.13.6</version>
-      </dependency>
+        </dependency>
 
-      <dependency>
+        <dependency>
           <groupId>redis.clients</groupId>
           <artifactId>jedis</artifactId>
           <version>2.0.0</version>
@@ -74,19 +79,19 @@
           <scope>compile</scope>
         </dependency>
 
-      <dependency>
+        <dependency>
           <groupId>org.apache.httpcomponents</groupId>
           <artifactId>httpcore</artifactId>
           <version>4.2.2</version>
           <scope>compile</scope>
-      </dependency>
+        </dependency>
 
-      <dependency>
+        <dependency>
           <groupId>org.apache.httpcomponents</groupId>
           <artifactId>httpclient</artifactId>
           <version>4.2.3</version>
           <scope>compile</scope>
-      </dependency>
+        </dependency>
 
         <dependency>
           <groupId>org.glassfish.jersey.core</groupId>
@@ -125,26 +130,26 @@
       </build>
 
 
-    <repositories>
+      <repositories>
         <repository>
-            <id>mkovatsc-github-releases</id>
-            <name>mkovatsc-github</name>
-            <url>https://github.com/mkovatsc/maven/raw/master/releases/</url>
+          <id>mkovatsc-github-releases</id>
+          <name>mkovatsc-github</name>
+          <url>https://github.com/mkovatsc/maven/raw/master/releases/</url>
         </repository>
         <repository>
-            <id>mkovatsc-github-snapshots</id>
-            <name>mkovatsc-github</name>
-            <url>https://github.com/mkovatsc/maven/raw/master/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+          <id>mkovatsc-github-snapshots</id>
+          <name>mkovatsc-github</name>
+          <url>https://github.com/mkovatsc/maven/raw/master/snapshots/</url>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
         </repository>
         <repository>
-            <id>mkovatsc-github-thirdparty</id>
-            <name>mkovatsc-github</name>
-            <url>https://github.com/mkovatsc/maven/raw/master/thirdparty/</url>
+          <id>mkovatsc-github-thirdparty</id>
+          <name>mkovatsc-github</name>
+          <url>https://github.com/mkovatsc/maven/raw/master/thirdparty/</url>
         </repository>
-    </repositories>
+      </repositories>
 
       <properties>
         <jersey.version>2.3</jersey.version>
