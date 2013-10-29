@@ -13,7 +13,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
-public class ServersTest {
+public class ServersListingTest {
 
     private HttpServer server;
     private WebTarget target;
