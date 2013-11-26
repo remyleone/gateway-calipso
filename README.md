@@ -34,3 +34,7 @@ Running
 To get the code running, you should use the following line:
 
   mvn clean compile exec:java
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/sieben/gateway-calipso/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
