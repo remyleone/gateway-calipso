@@ -9,7 +9,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Set;
 
-@Path("servers")
+import static com.thalesgroup.tcs.tai.gwcalipso.CoAPClient.*;
+
+@Path("")
 public class Servers {
 
     @GET
@@ -17,7 +19,7 @@ public class Servers {
     public String getRoot() {
 
         StringBuilder answer = new StringBuilder();
-
+        System.out.println("Primo step");
         Set<String> coap_servers = Redis.smembers("coap_servers");
 
         for(String s: coap_servers){
@@ -41,7 +43,7 @@ public class Servers {
         System.out.println(uri.toString());
         String key_exist = Redis.redis_lookup(uri.toString());
         System.out.println("RESULTS REDIS :" + key_exist);
-
+        System.out.println("Primo step");
         if (key_exist.isEmpty()) {
             // Cache invalidation => CoAP request
             CoAPClient coAPClient = new CoAPClient();
@@ -71,9 +73,11 @@ public class Servers {
         System.out.println(uri.toString());
         String key_exist = Redis.redis_lookup(uri.toString());
         System.out.println("RESULTS REDIS :" + key_exist);
-
+        System.out.println("Primo step");
         if (key_exist.isEmpty()) {
+
             CoAPClient coAPClient = new CoAPClient();
+            System.out.println("Qua arrivo");
             String result = coAPClient.execute(uri, "GET");
             Redis.setex(uri.toString(), 10, result);
             answer = result;

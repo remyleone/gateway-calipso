@@ -22,6 +22,8 @@ public class Redis {
         jedis.del("coap_servers");
         jedis.sadd("coap_servers", "coap://coap.me");
         jedis.sadd("coap_servers", "coap://localhost");
+        jedis.sadd("coap_servers", "coap://sky2:5683");
+        System.out.println("Added");
     }
 
     public static void redis_publish(String channel, String message){
