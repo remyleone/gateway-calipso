@@ -39,32 +39,18 @@
           <scope>test</scope>
         </dependency>
 
-
-      <dependency>
-          <groupId>ch.ethz.inf.vs</groupId>
-          <artifactId>californium</artifactId>
-          <version>0.13.6</version>
-          <scope>compile</scope>
-      </dependency>
-
       <dependency>
           <groupId>com.sun.jersey</groupId>
           <artifactId>jersey-json</artifactId>
           <version>1.17.1</version>
       </dependency>
 
-
-      <dependency>
-          <groupId>ch.ethz.inf.vs</groupId>
-          <artifactId>cf-client</artifactId>
-          <version>0.13.6</version>
+ 	  <dependency>
+            <groupId>org.eclipse.californium</groupId>
+            <artifactId>californium-core</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
       </dependency>
-
-      <dependency>
-          <groupId>ch.ethz.inf.vs</groupId>
-          <artifactId>cf-server</artifactId>
-          <version>0.13.6</version>
-      </dependency>
+      
 
       <dependency>
           <groupId>redis.clients</groupId>
@@ -127,23 +113,15 @@
 
     <repositories>
         <repository>
-            <id>mkovatsc-github-releases</id>
-            <name>mkovatsc-github</name>
-            <url>https://github.com/mkovatsc/maven/raw/master/releases/</url>
-        </repository>
-        <repository>
-            <id>mkovatsc-github-snapshots</id>
-            <name>mkovatsc-github</name>
-            <url>https://github.com/mkovatsc/maven/raw/master/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>mkovatsc-github-thirdparty</id>
-            <name>mkovatsc-github</name>
-            <url>https://github.com/mkovatsc/maven/raw/master/thirdparty/</url>
-        </repository>
+      <id>repo.eclipse.org</id>
+      <name>Californium Repository - Releases</name>
+      <url>https://repo.eclipse.org/content/repositories/californium-releases/</url>
+    </repository>
+    <repository>
+      <id>repo1.eclipse.org</id>
+      <name>Californium Repository - Snapshots</name>
+      <url>https://repo.eclipse.org/content/repositories/californium-snapshots/</url>
+    </repository>
     </repositories>
 
       <properties>

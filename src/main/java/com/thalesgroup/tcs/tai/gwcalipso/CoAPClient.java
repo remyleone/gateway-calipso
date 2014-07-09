@@ -1,54 +1,90 @@
 package com.thalesgroup.tcs.tai.gwcalipso;
 
-import ch.ethz.inf.vs.californium.coap.*;
-import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
-import ch.ethz.inf.vs.californium.coap.registries.OptionNumberRegistry;
-import ch.ethz.inf.vs.californium.endpoint.resources.RemoteResource;
-import ch.ethz.inf.vs.californium.endpoint.resources.Resource;
-
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.UnknownHostException;
 
+import org.eclipse.californium.core.coap.BlockOption;
+import org.eclipse.californium.core.coap.CoAP;
+
+import org.eclipse.californium.core.coap.LinkFormat;
+import org.eclipse.californium.core.coap.MediaTypeRegistry;
+import org.eclipse.californium.core.coap.MessageObserverAdapter;
+import org.eclipse.californium.core.coap.Request;
+import org.eclipse.californium.core.coap.Response;
+import org.eclipse.californium.core.network.Endpoint;
+import org.eclipse.californium.core.network.config.NetworkConfig;
+import org.eclipse.californium.core.network.config.NetworkConfigDefaults;
+import org.eclipse.californium.core.observe.ObserveNotificationOrderer;
+
+
+
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CoAPClient.
+ */
 public class CoAPClient {
 
     // resource URI path used for discovery
+    /** The Constant DISCOVERY_RESOURCE. */
     private static final String DISCOVERY_RESOURCE = "/.well-known/core";
 
     // exit codes for runtime errors
+    /** The Constant ERR_MISSING_METHOD. */
     private static final int ERR_MISSING_METHOD  = 1;
+    
+    /** The Constant ERR_UNKNOWN_METHOD. */
     private static final int ERR_UNKNOWN_METHOD  = 2;
+    
+    /** The Constant ERR_MISSING_URI. */
     private static final int ERR_MISSING_URI     = 3;
+    
+    /** The Constant ERR_BAD_URI. */
     private static final int ERR_BAD_URI         = 4;
+    
+    /** The Constant ERR_REQUEST_FAILED. */
     private static final int ERR_REQUEST_FAILED  = 5;
+    
+    /** The Constant ERR_RESPONSE_FAILED. */
     private static final int ERR_RESPONSE_FAILED = 6;
+    
+    /** The Constant ERR_BAD_LINK_FORMAT. */
     private static final int ERR_BAD_LINK_FORMAT = 7;
 
+    /**
+     * New request.
+     *
+     * @param method the method
+     * @return the request
+     */
     private static Request newRequest(String method) {
         if (method.equals("GET")) {
-            return new GETRequest();
+            return new Request(CoAP.Code.GET);
         } else if (method.equals("POST")) {
-            return new POSTRequest();
+            return Request.newPost();
+            
         } else if (method.equals("PUT")) {
-            return new PUTRequest();
-        } else if (method.equals("DELETE")) {
-            return new DELETERequest();
-        } else if (method.equals("DISCOVER")) {
-            return new GETRequest();
+            return Request.newPut();
+        }  else if (method.equals("OBSERVE")) {
+            return Request.newGet();
         }
-//        else if (method.equals("OBSERVE")) {
-//            return new GETRequest();
-//        }
         else {
             return null;
         }
     }
 
-    public static String execute(URI uri, String method) {
+    /**
+     * Execute.
+     *
+     * @param uri the uri
+     * @param method the method
+     * @return the string
+     * @throws InterruptedException 
+     */
+    public static Response execute(URI uri, String method) {
 
         // initialize parameters
-        String payload = null;
+    	byte[] payload = null;
         boolean loop;
 
         // check if mandatory parameters specified
@@ -69,8 +105,9 @@ public class CoAPClient {
         }
 
         if (method.equals("OBSERVE")) {
-            request.setOption(new Option(0, OptionNumberRegistry.OBSERVE));
-            loop = true;
+        	request.setObserve();
+			loop = true;
+			
         }
 
         // set request URI
@@ -90,87 +127,63 @@ public class CoAPClient {
         }
 
         request.setURI(uri);
-        request.setPayload(payload);
-        request.setToken(TokenManager.getInstance().acquireToken() );
-        request.setContentType(MediaTypeRegistry.TEXT_PLAIN);
-
+       request.setPayload(payload);
+       // request.setToken(TokenManager.getInstance().acquireToken() );
+        request.getOptions().setContentFormat(MediaTypeRegistry.TEXT_PLAIN);
+        request.send();
         // enable response queue in order to use blocking I/O
-        request.enableResponseQueue(true);
-
-        //
-        //request.prettyPrint();
-
-        // execute request
         try {
-            request.execute();
+        	
+			Response response = request.waitForResponse();
+			if (response != null) {
 
-            // loop for receiving multiple responses
-            do {
+            	System.out.println("received " + response);
+                System.out.println("Time elapsed (ms): " + response.getRTT());
 
-                // receive response
+                // check of response contains resources
+                if (response.getOptions().hasContentFormat(MediaTypeRegistry.APPLICATION_LINK_FORMAT)) {
 
-                System.out.println("Receiving response...");
-                Response response = null;
-                try {
-                    response = request.receiveResponse();
-                } catch (InterruptedException e) {
-                    System.err.println("Failed to receive response: " + e.getMessage());
-                    System.exit(ERR_RESPONSE_FAILED);
-                }
-
-                // output response
-
-                if (response != null) {
-
-                    response.prettyPrint();
-                    System.out.println("Time elapsed (ms): " + response.getRTT());
-
-                    // check of response contains resources
-                    if (response.getContentType()==MediaTypeRegistry.APPLICATION_LINK_FORMAT) {
-
-                        String linkFormat = response.getPayloadString();
-
-                        // create resource three from link format
-                        Resource root = RemoteResource.newRoot(linkFormat);
-                        if (root != null) {
-
-                            // output discovered resources
-                            System.out.println("\nDiscovered resources:");
-                            root.prettyPrint();
-
-                        } else {
-                            System.err.println("Failed to parse link format");
-                            System.exit(ERR_BAD_LINK_FORMAT);
-                        }
-                    } else {
-
-                        // check if link format was expected by client
-                        if (method.equals("DISCOVER")) {
-                            System.out.println("Server error: Link format not specified");
-                        }
-                    }
-
+                    String linkFormat = response.getPayloadString();
+//
+//                    // create resource three from link format
+//                    Resource root = RemoteResource.newRoot(linkFormat);
+//                  if (root != null) {
+//
+//                        // output discovered resources
+//                        System.out.println("\nDiscovered resources:");
+//                        root.prettyPrint();
+//
+//                    } else {
+//                        System.err.println("Failed to parse link format");
+//                        System.exit(ERR_BAD_LINK_FORMAT);
+//                    }
                 } else {
 
-                    // no response received
-                    System.err.println("Request timed out");
-                    break;
+                    // check if link format was expected by client
+                    if (method.equals("DISCOVER")) {
+                        System.out.println("Server error: Link format not specified");
+                    }
                 }
-                return response.getPayloadString();
 
-            } while (loop);
+            } else {
 
-        } catch (UnknownHostException e) {
-            System.err.println("Unknown host: " + e.getMessage());
-            System.exit(ERR_REQUEST_FAILED);
-        } catch (IOException e) {
-            System.err.println("Failed to execute request: " + e.getMessage());
-            System.exit(ERR_REQUEST_FAILED);
-        }
+                // no response received
+                System.err.println("Request timed out");
+                return null;
+            }
+            return response;
+			
+			
+			
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
+        
         // finish
         System.out.println();
 
-        return "FAIL";
+        return null;
     }
 }
