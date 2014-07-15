@@ -1,9 +1,10 @@
 package com.thalesgroup.tcs.tai.gwcalipso;
 
-import ch.ethz.inf.vs.californium.endpoint.LocalEndpoint;
-import ch.ethz.inf.vs.californium.examples.ExampleServer;
-import ch.ethz.inf.vs.californium.examples.resources.HelloWorldResource;
-import ch.ethz.inf.vs.californium.examples.resources.TimeResource;
+import org.eclipse.californium.core.CoapResource;
+import org.eclipse.californium.core.CoapServer;
+import org.eclipse.californium.core.server.resources.CoapExchange;
+
+
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.junit.After;
 import org.junit.Before;
@@ -26,9 +27,9 @@ public class ServersTest {
         Client c = ClientBuilder.newClient();
 
         // create a local CoAP server
-        LocalEndpoint coap_server = new ExampleServer();
-        coap_server.addResource(new HelloWorldResource());
-        coap_server.addResource(new TimeResource());
+        CoapServer coap_server = new CoapServer();
+        coap_server.add(new HelloWorldResource());
+  //      coap_server.addResource(new TimeResource());
         coap_server.start();
 
 
@@ -56,6 +57,25 @@ public class ServersTest {
     public void testRemoteServer() {
      String responseMsg = target.path("servers/coap.me").request().get(String.class);
      System.out.println(responseMsg);
+    }
+    
+    class HelloWorldResource extends CoapResource {
+        
+        public HelloWorldResource() {
+            
+            // set resource identifier
+            super("helloWorld");
+            
+            // set display name
+            getAttributes().setTitle("Hello-World Resource");
+        }
+        
+        @Override
+        public void handleGET(CoapExchange exchange) {
+            
+            // respond to the request
+            exchange.respond("Hello World!");
+        }
     }
 
 
